@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>REALYZE Lines — Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+  <main class="login-shell">
+    <section class="login-brand">
+      <div class="brand-kicker">RƎ:ALYZE / INTERNAL</div>
+      <h1>LINE<br>DISTRIBUTION</h1>
+      <p>For RƎ:ALYZE members.</p>
+      <div class="brand-orbit orbit-one"></div><div class="brand-orbit orbit-two"></div>
+    </section>
+    <section class="login-card">
+      <div class="mini-logo">RLZ</div>
+      <h2>Đăng nhập</h2>
+      <div id="configWarning"></div>
+      <form id="loginForm" class="form-stack">
+        <label>Email<input id="email" type="email" autocomplete="email" required placeholder="name@realyze.com"></label>
+        <label>Mật khẩu<input id="password" type="password" autocomplete="current-password" required placeholder="••••••••"></label>
+        <button id="loginBtn" class="primary-btn" type="submit">Đăng nhập <span>→</span></button>
+        <p id="loginError" class="form-error hidden"></p>
+      </form>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="shared.js"></script>
+  <script src="login.js"></script>
+</body>
+</html>

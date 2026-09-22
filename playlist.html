@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>REALYZE Lines — Playlist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar"><a class="wordmark" href="index.html"><b>RƎ:ALYZE</b><span>LINES</span></a><nav><a href="index.html">Sảnh</a><a class="active" href="playlist.html">Playlist</a></nav><div class="user-box"><span id="currentMemberDot" class="user-dot"></span><span id="currentMemberName">...</span><button id="logoutBtn" class="ghost-btn small">Đăng xuất</button></div></header>
+<main class="page-shell">
+  <section class="page-title"><div><span class="eyebrow">PROJECT LIBRARY</span><h1>Playlist</h1></div><button id="openCreateBtn" class="primary-btn plus-btn">＋ Tạo bài mới</button></section>
+  <div id="playlistGrid" class="song-grid playlist-grid"><div class="empty-state"><div class="empty-icon">♫</div><h3>No projects yet</h3><button class="round-plus" data-open-create>＋</button></div></div>
+</main>
+
+<div id="createModal" class="modal hidden" aria-hidden="true">
+  <div class="modal-backdrop" data-close-modal></div>
+  <section class="modal-card create-modal-card">
+    <div class="modal-head"><div><span class="eyebrow">NEW PROJECT</span><h2>Tạo bài mới</h2></div><button class="icon-btn" data-close-modal>×</button></div>
+    <form id="createSongForm" class="create-form">
+      <div class="field-grid">
+        <label class="wide">Tên bài<input id="songTitle" required maxlength="160" placeholder="Ví dụ: Virtual to LIVE"></label>
+        <label>Nhạc<input id="songAudio" required type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac"></label>
+        <label>Ảnh nền<input id="songCover" required type="file" accept="image/png,image/jpeg,image/webp"></label>
+      </div>
+      <div class="form-section"><div class="form-section-title"><b>Thành viên tham gia</b></div><div id="memberPicker" class="member-picker"><span>Đang tải member...</span></div></div>
+      <label class="lyrics-field">Lời bài hát<textarea id="songLyrics" required rows="12" placeholder="Aitai\nKimi no koe wo sagashite\n\nYoru no naka de"></textarea><small id="lineCounter">0 dòng</small></label>
+      <div class="modal-actions"><button type="button" class="ghost-btn" data-close-modal>Hủy</button><button id="createSongBtn" class="primary-btn" type="submit">Tạo & chia lời →</button></div>
+      <p id="createError" class="form-error hidden"></p>
+    </form>
+  </section>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><script src="shared.js"></script><script src="playlist.js"></script>
+</body>
+</html>

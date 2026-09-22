@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>REALYZE Lines — Sảnh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="wordmark" href="index.html"><b>RƎ:ALYZE</b><span>LINES</span></a>
+    <div class="user-box"><span id="currentMemberDot" class="user-dot"></span><img id="currentMemberAvatar" class="user-avatar hidden" alt=""><span id="currentMemberName">...</span><button id="logoutBtn" class="ghost-btn small">Đăng xuất</button></div>
+  </header>
+  <main class="lobby-shell">
+    <section class="hero-panel">
+      <div><span class="eyebrow">RƎ:ALYZE / LINE DISTRIBUTION</span><h1>Every line.<br><em>Every voice.</em></h1><p>A shared space for RƎ:ALYZE covers.</p></div>
+      <div class="hero-disc"><div class="disc-core">RLZ</div></div>
+    </section>
+    <section class="action-grid">
+      <a class="action-card action-main" href="playlist.html"><div class="action-number">01</div><h2>Distribute</h2><span class="action-arrow">↗</span></a>
+      <a class="action-card" href="playlist.html"><div class="action-number">02</div><h2>Playlist</h2><span class="action-arrow">↗</span></a>
+    </section>
+    <section class="section-block"><div class="section-heading"><div><span class="eyebrow">RECENT</span><h2>Recent projects</h2></div><a href="playlist.html">View all →</a></div><div id="recentSongs" class="song-grid"><div class="empty-inline">Đang tải...</div></div></section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><script src="shared.js"></script><script src="lobby.js"></script>
+</body>
+</html>
