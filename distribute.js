@@ -53,7 +53,7 @@
     members = all.filter(m => selected.has(m.slug));
 
     const linesRes = await db.from('lyric_song_lines')
-      .select('id,song_id,line_number,lyric_text,is_all')
+      .select('id,song_id,line_number,lyric_text,is_all,start_ms,end_ms')
       .eq('song_id', songId)
       .order('line_number');
     if (linesRes.error) throw linesRes.error;
@@ -206,7 +206,9 @@
       song_id: songId,
       line_number: index + 1,
       lyric_text: text,
-      is_all: blank ? false : !!oldLine?.is_all
+      is_all: blank ? false : !!oldLine?.is_all,
+      start_ms: oldLine?.start_ms ?? null,
+      end_ms: oldLine?.end_ms ?? null
     };
     const set = blank ? new Set() : new Set(assignments.get(oldLine?.id) || []);
     return { line: next, set };
@@ -275,7 +277,9 @@
       song_id: songId,
       line_number: i + 1,
       lyric_text: l.lyric_text,
-      is_all: !!l.is_all
+      is_all: !!l.is_all,
+      start_ms: l.start_ms ?? null,
+      end_ms: l.end_ms ?? null
     }));
 
     await db.from('lyric_song_lines').delete().eq('song_id', songId);
@@ -315,7 +319,9 @@
           song_id: songId,
           line_number: l.line_number,
           lyric_text: l.lyric_text,
-          is_all: l.is_all
+          is_all: l.is_all,
+          start_ms: l.start_ms ?? null,
+          end_ms: l.end_ms ?? null
         })));
         if (insLines.error) throw insLines.error;
       }
@@ -437,6 +443,7 @@
     toast('Đã cập nhật lời. Bấm Lưu để ghi lên Supabase.', 'success');
   };
 
+  $('#timingBtn').onclick = () => location.href = `timing.html?id=${songId}`;
   $('#saveBtn').onclick = save;
   $('#previewBtn').onclick = openPreview;
   document.addEventListener('click', e => { if (e.target.matches('[data-close-preview]')) closePreview(); });

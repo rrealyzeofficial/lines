@@ -9,7 +9,11 @@
 </head>
 <body class="song-view-page">
   <div id="songBackdrop" class="song-backdrop"></div>
-  <header class="topbar glass"><a class="wordmark" href="index.html"><b>RƎ:ALYZE</b><span>LINES</span></a><a class="ghost-btn" href="playlist.html">← Playlist</a><button id="editSongBtn" class="primary-btn compact">Sửa chia lời</button></header>
+  <header class="topbar glass">
+    <a class="wordmark" href="index.html"><b>RƎ:ALYZE</b><span>LINES</span></a>
+    <a class="ghost-btn" href="playlist.html">← Playlist</a>
+    <div class="top-actions song-view-actions"><a id="timingSongBtn" class="ghost-btn" href="#">Line Studio</a><button id="editSongBtn" class="primary-btn compact">Sửa chia lời</button></div>
+  </header>
   <main class="song-view-shell">
     <section class="song-view-head"><div id="songCoverLarge" class="song-cover-large"></div><div class="song-meta"><span class="eyebrow">LINE SHEET</span><h1 id="viewSongTitle">...</h1><div id="viewMembers" class="member-legend"></div><audio id="viewAudio" controls preload="metadata"></audio></div></section>
     <section class="filter-section"><span>Hiển thị:</span><div id="partFilters" class="part-filters"></div></section>

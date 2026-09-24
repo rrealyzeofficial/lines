@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>REALYZE Lines — Line Distribution</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;600;700;800;900&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="timing-page distribution-page">
+<header class="topbar timing-topbar">
+  <a class="wordmark" href="index.html"><b>RƎ:ALYZE</b><span>LINES</span></a>
+  <div class="distribute-title"><span class="status-pill done">LINE DISTRIBUTION</span><strong id="timingSongTitle">...</strong></div>
+  <div class="top-actions distribution-top-actions">
+    <a id="backToSongBtn" class="ghost-btn" href="playlist.html">Lyrics</a>
+    <select id="audioVersionSelect" class="distribution-version-select" aria-label="Audio version"></select>
+    <button id="changeAudioBtn" class="ghost-btn">Change Audio</button>
+    <button id="videoStyleBtn" class="ghost-btn">Style</button>
+    <button id="videoImagesBtn" class="ghost-btn">Images</button>
+    <button id="toggleEditorBtn" class="ghost-btn">Edit Timing</button>
+    <button id="saveTimingBtn" class="ghost-btn hidden">Save</button>
+    <button id="exportVideoBtn" class="primary-btn compact">Export Video</button>
+  </div>
+</header>
+
+<main class="distribution-shell">
+  <section class="distribution-player-card">
+    <div id="distributionStage" class="distribution-stage">
+      <div id="distributionStageBg" class="distribution-stage-bg"></div>
+      <div class="distribution-stage-shade"></div>
+
+      <div class="distribution-stage-head">
+        <div>
+          <span>RƎ:ALYZE</span>
+          <strong>LINE DISTRIBUTION</strong>
+        </div>
+        <div id="distributionSongName" class="distribution-song-name">...</div>
+      </div>
+
+      <div class="distribution-lyric-zone">
+        <div id="stageSinger" class="distribution-singer"></div>
+        <div class="distribution-lyric-stack">
+          <div id="stagePrev" class="distribution-lyric distribution-lyric-prev"></div>
+          <div id="stageLyric" class="distribution-lyric">...</div>
+          <div id="stageNext" class="distribution-next"></div>
+        </div>
+        <div id="stageAdlib" class="distribution-adlib"></div>
+      </div>
+
+      <section id="finalResults" class="distribution-final-results hidden" aria-hidden="true">
+        <div class="distribution-final-heading">
+          <span>FINAL DISTRIBUTION</span>
+          <strong id="finalSongTitle">...</strong>
+        </div>
+        <div class="distribution-final-grid">
+          <div class="distribution-final-chart-wrap">
+            <div id="finalDonut" class="distribution-final-donut">
+              <div class="distribution-final-donut-center"><b>100%</b><span>LINES</span></div>
+            </div>
+          </div>
+          <div class="distribution-final-ranking">
+            <div class="distribution-final-table-head"><span>#</span><span>MEMBER</span><span>TIME</span><span>%</span></div>
+            <div id="finalRankingRows" class="distribution-final-ranking-rows"></div>
+          </div>
+        </div>
+        <div class="distribution-balance-box">
+          <span>LINE BALANCE</span>
+          <strong id="finalBalance">—</strong>
+        </div>
+      </section>
+
+      <div id="memberBoard" class="distribution-member-board"></div>
+    </div>
+
+  <section id="chatDistributionStage" class="chat-distribution-stage hidden" aria-hidden="true">
+    <div id="chatDistributionBg" class="chat-distribution-bg"></div>
+    <div class="chat-distribution-shell">
+      <aside class="chat-distribution-left">
+        <div id="chatCoverArt" class="chat-cover-art"></div>
+        <div class="chat-cover-shade"></div>
+        <div class="chat-cover-copy"><span>RƎ:ALYZE</span><strong id="chatSongTitle">...</strong></div>
+        <div id="chatMemberBoard" class="chat-member-board"></div>
+      </aside>
+      <section class="chat-distribution-right">
+        <div class="chat-distribution-head"><span>LINE DISTRIBUTION</span><strong id="chatNowLabel">...</strong></div>
+        <div id="chatBubbleStream" class="chat-bubble-stream"></div>
+        <div id="chatLeaveStream" class="chat-leave-stream"></div>
+        <div id="chatTypingIndicator" class="chat-typing-indicator hidden"></div>
+        <div id="chatAdlibStream" class="chat-adlib-stream"></div>
+      </section>
+    </div>
+    <section id="chatFinalResults" class="chat-final-results hidden" aria-hidden="true">
+      <div class="chat-final-card">
+        <div class="chat-final-chart-wrap"><div id="chatFinalDonut" class="chat-final-donut"><div><b>100%</b><span>LINES</span></div></div></div>
+        <div class="chat-final-ranking"><div class="chat-final-head"><span>#</span><span>MEMBER</span><span>TIME</span><span>%</span></div><div id="chatFinalRows"></div><div class="chat-final-balance"><span>LINE BALANCE</span><strong id="chatFinalBalance">—</strong></div></div>
+      </div>
+    </section>
+  </section>
+
+
+    <div class="distribution-controls">
+      <button id="playPauseBtn" class="distribution-play-btn" type="button" aria-label="Play">▶</button>
+      <div class="distribution-seek-wrap">
+        <input id="seekBar" class="distribution-seek" type="range" min="0" max="1000" value="0" step="1">
+        <div class="distribution-clock"><b id="currentClock">00:00.000</b><span id="durationClock">/ 00:00.000</span></div>
+      </div>
+      <label class="distribution-all-toggle">
+        <input id="countAllToggle" type="checkbox">
+        <span>All → everyone</span>
+      </label>
+      <span id="exportState" class="timing-export-state"></span>
+    </div>
+    <audio id="timingAudio" preload="metadata"></audio>
+  </section>
+
+  <div id="timingEditorBackdrop" class="timing-editor-backdrop hidden"></div>
+  <section id="timingEditorPanel" class="timing-list-card distribution-editor-panel hidden" aria-hidden="true">
+    <div class="timing-list-head distribution-editor-head">
+      <div class="distribution-editor-title">
+        <span class="eyebrow">TIMING EDITOR</span>
+        <h1>Line timing</h1>
+      </div>
+      <div class="distribution-editor-transport">
+        <button id="editorPlayPauseBtn" class="ghost-btn small editor-play-btn" type="button" aria-label="Play">▶</button>
+        <div class="editor-seek-wrap">
+          <input id="editorSeekBar" class="editor-seek" type="range" min="0" max="1000" value="0" step="1" aria-label="Seek audio">
+          <div class="editor-seek-time"><b id="editorClock">00:00.000</b><span id="editorDurationClock">/ 00:00.000</span></div>
+        </div>
+        <label class="timing-follow-toggle" title="Follow the active line">
+          <input id="followTimingToggle" type="checkbox" checked>
+          <span>Follow</span>
+        </label>
+      </div>
+      <div class="timing-list-tools">
+        <span id="timingState" class="save-state">Saved</span>
+        <button id="jumpPrevBtn" class="ghost-btn small">← Prev</button>
+        <button id="jumpNextBtn" class="ghost-btn small">Next →</button>
+        <button id="addAdlibBtn" class="ghost-btn small">+ Adlib</button>
+        <button id="clearTimingBtn" class="ghost-btn small">Clear</button>
+        <button id="closeEditorBtn" class="ghost-btn small editor-close-btn" type="button" aria-label="Close editor">✕</button>
+      </div>
+    </div>
+    <div id="timingRows" class="timing-rows"><div class="empty-inline">Đang tải...</div></div>
+  </section>
+</main>
+  <dialog id="videoStyleDialog" class="distribution-dialog compact-dialog">
+    <div class="distribution-dialog-head"><div><span class="eyebrow">VIDEO STYLE</span><h2>Choose distribution style</h2></div><button id="closeVideoStyleBtn" class="ghost-btn small" type="button">✕</button></div>
+    <div class="distribution-style-picker">
+      <button class="distribution-style-option" data-video-style="classic" type="button"><b>Classic</b><span>Live ranking, bars, lyric center.</span></button>
+      <button class="distribution-style-option" data-video-style="chat" type="button"><b>Chat</b><span>Blurred cover panel + dialogue bubbles.</span></button>
+    </div>
+  </dialog>
+
+  <dialog id="changeAudioDialog" class="distribution-dialog compact-dialog">
+    <div class="distribution-dialog-head"><div><span class="eyebrow">AUDIO VERSION</span><h2>Change audio</h2></div><button id="closeChangeAudioBtn" class="ghost-btn small" type="button">✕</button></div>
+    <div class="change-audio-form">
+      <label class="field"><span>New audio</span><input id="replacementAudioFile" type="file" accept="audio/*,.mp3,.wav,.ogg,.m4a,.flac"></label>
+      <label class="field"><span>Version name</span><input id="replacementAudioLabel" type="text" maxlength="80" placeholder="Final Mix"></label>
+      <div class="retime-choice-grid">
+        <label><input type="radio" name="retimeMode" value="copy" checked><span><b>Keep timings</b><small>Copy current timing as a new draft.</small></span></label>
+        <label><input type="radio" name="retimeMode" value="scale"><span><b>Scale timing</b><small>Scale IN/OUT by the new audio duration.</small></span></label>
+        <label><input type="radio" name="retimeMode" value="reset"><span><b>Reset timing</b><small>Keep parts/adlibs, clear all time marks.</small></span></label>
+      </div>
+      <div class="dialog-actions"><button id="saveReplacementAudioBtn" class="primary-btn compact" type="button">Use new audio</button></div>
+      <p id="changeAudioError" class="form-error hidden"></p>
+    </div>
+  </dialog>
+
+  <dialog id="videoImagesDialog" class="distribution-dialog">
+    <div class="distribution-dialog-head">
+      <div><span class="eyebrow">VIDEO</span><h2>Member images</h2></div>
+      <button id="closeVideoImagesBtn" class="ghost-btn small" type="button">✕</button>
+    </div>
+    <div id="videoImageRows" class="video-image-rows"></div>
+  </dialog>
+
+  <dialog id="adlibDialog" class="distribution-dialog compact-dialog">
+    <div class="distribution-dialog-head">
+      <div><span class="eyebrow">TIMELINE</span><h2 id="adlibDialogTitle">Add adlib</h2></div>
+      <button id="closeAdlibBtn" class="ghost-btn small" type="button">✕</button>
+    </div>
+    <div class="adlib-form">
+      <label class="field"><span>Text</span><input id="adlibText" type="text" maxlength="120" placeholder="Optional"></label>
+      <div><span class="field-label">Members</span><div id="adlibMemberChoices" class="adlib-member-choices"></div></div>
+      <label class="adlib-show-toggle"><input id="adlibShowText" type="checkbox"><span>Show text</span></label>
+      <div class="dialog-actions"><button id="deleteAdlibBtn" class="ghost-btn danger hidden" type="button">Delete</button><button id="saveAdlibBtn" class="primary-btn compact" type="button">Save</button></div>
+    </div>
+  </dialog>
+
+<canvas id="exportCanvas" width="1920" height="1080" class="hidden"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="shared.js"></script>
+<script src="timing.js"></script>
+</body>
+</html>

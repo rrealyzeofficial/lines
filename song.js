@@ -8,7 +8,9 @@
   let lines = [];
   let assignments = new Map();
   let filter = 'all';
+  let lastActiveId = null;
 
+  const audio = $('#viewAudio');
   const isBlank = line => !String(line?.lyric_text || '').trim();
 
   try {
@@ -32,11 +34,15 @@
     members = roster.filter(m => sel.has(m.slug));
 
     const lr = await db.from('lyric_song_lines')
-      .select('id,line_number,lyric_text,is_all')
+      .select('id,line_number,lyric_text,is_all,start_ms,end_ms')
       .eq('song_id', songId)
       .order('line_number');
     if (lr.error) throw lr.error;
-    lines = lr.data || [];
+    lines = (lr.data || []).map(l => ({
+      ...l,
+      start_ms: l.start_ms == null ? null : Number(l.start_ms),
+      end_ms: l.end_ms == null ? null : Number(l.end_ms)
+    }));
     lines.forEach(l => assignments.set(l.id, new Set()));
 
     const ids = lines.map(l => l.id);
@@ -55,6 +61,7 @@
     document.title = `${song.title} — REALYZE Lines`;
     $('#viewSongTitle').textContent = song.title;
     $('#editSongBtn').onclick = () => location.href = `distribute.html?id=${songId}`;
+    $('#timingSongBtn').href = `timing.html?id=${songId}`;
     $('#viewMembers').innerHTML = members.map(m => `<span class="legend-chip"><i style="background:${m.displayColor}"></i>${escapeHtml(m.name)}</span>`).join('');
 
     const cover = await signedUrl('lyric-song-covers', song.cover_path, 7200);
@@ -63,8 +70,8 @@
       $('#songBackdrop').style.backgroundImage = `url('${cover}')`;
     }
 
-    const audio = await signedUrl('lyric-song-audio', song.audio_path, 7200);
-    if (audio) $('#viewAudio').src = audio;
+    const audioUrl = await signedUrl('lyric-song-audio', song.audio_path, 7200);
+    if (audioUrl) audio.src = audioUrl;
   }
 
   function renderFilters() {
@@ -128,9 +135,11 @@
     let html = '';
     let run = null;
 
+    const lineHtml = (line, first) => `${first ? '' : '<span class="part-label-placeholder"></span>'}<span class="run-text timed-lyric-line" data-line-id="${line.id}">${escapeHtml(line.lyric_text)}</span>`;
+
     const flush = () => {
       if (!run) return;
-      html += `<div class="lyric-run"><span class="part-label">「 ${run.names} 」</span><span class="run-text">${escapeHtml(run.texts[0])}</span>${run.texts.slice(1).map(text => `<span class="part-label-placeholder"></span><span class="run-text">${escapeHtml(text)}</span>`).join('')}</div>`;
+      html += `<div class="lyric-run"><span class="part-label">「 ${run.names} 」</span>${lineHtml(run.lines[0], true)}${run.lines.slice(1).map(line => lineHtml(line, false)).join('')}</div>`;
       run = null;
     };
 
@@ -144,9 +153,9 @@
       const part = partInfo(line);
       if (!run || run.key !== part.key) {
         flush();
-        run = { key: part.key, names: part.names, texts: [line.lyric_text] };
+        run = { key: part.key, names: part.names, lines: [line] };
       } else {
-        run.texts.push(line.lyric_text);
+        run.lines.push(line);
       }
     });
 
@@ -157,5 +166,52 @@
   function renderLyrics() {
     const visible = getFilteredLines();
     $('#finalLyrics').innerHTML = groupedLyricsHtml(visible) || '<div class="empty-inline">Member này chưa có line riêng.</div>';
+    lastActiveId = null;
+    syncTimedLyrics(false);
   }
+
+  function effectiveEnd(line) {
+    if (line.end_ms != null) return line.end_ms;
+    const ordered = lines.filter(l => !isBlank(l) && l.start_ms != null).sort((a, b) => a.start_ms - b.start_ms);
+    const idx = ordered.findIndex(l => l.id === line.id);
+    if (idx >= 0 && ordered[idx + 1]) return ordered[idx + 1].start_ms;
+    if (Number.isFinite(audio.duration)) return Math.round(audio.duration * 1000);
+    return line.start_ms + 5000;
+  }
+
+  function activeLineAt(ms) {
+    const eligible = lines.filter(l => !isBlank(l) && l.start_ms != null && l.start_ms <= ms).sort((a, b) => a.start_ms - b.start_ms);
+    for (let i = eligible.length - 1; i >= 0; i--) {
+      if (ms < effectiveEnd(eligible[i])) return eligible[i];
+    }
+    return null;
+  }
+
+  function syncTimedLyrics(shouldScroll = true) {
+    const current = activeLineAt(Math.round((audio.currentTime || 0) * 1000));
+    document.querySelectorAll('.timed-lyric-line.is-playing').forEach(el => el.classList.remove('is-playing'));
+    if (!current) {
+      lastActiveId = null;
+      return;
+    }
+    const el = document.querySelector(`.timed-lyric-line[data-line-id="${current.id}"]`);
+    if (!el) return;
+    el.classList.add('is-playing');
+    if (shouldScroll && !audio.paused && lastActiveId !== current.id) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    lastActiveId = current.id;
+  }
+
+  let playbackFrame = 0;
+  function runPlaybackFrame() {
+    syncTimedLyrics(true);
+    if (!audio.paused && !audio.ended) playbackFrame = requestAnimationFrame(runPlaybackFrame);
+  }
+  audio.addEventListener('timeupdate', () => syncTimedLyrics(true));
+  audio.addEventListener('seeked', () => syncTimedLyrics(false));
+  audio.addEventListener('play', () => { cancelAnimationFrame(playbackFrame); runPlaybackFrame(); });
+  audio.addEventListener('pause', () => cancelAnimationFrame(playbackFrame));
+  audio.addEventListener('ended', () => cancelAnimationFrame(playbackFrame));
+  audio.addEventListener('loadedmetadata', () => syncTimedLyrics(false));
 })();
